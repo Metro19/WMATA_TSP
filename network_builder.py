@@ -4,7 +4,7 @@
 # (Not affiliated in any way with the Washington Metropolitan Area Transportation Authority)
 import networkx as nx
 import wmata
-from vrp import run_simulation
+from tsp_solve import run_simulation
 # vars
 # TODO: Move to a txt or easy edit file
 TRAIN_WAIT_TIME = 6
@@ -21,8 +21,7 @@ def create_graph():
 
     # add all edges
     for e in wmata.get_all_paths_between_stations():
-        G.add_edge(e.start_code, e.end_code, cost=e.distance, object=e)
-        G.add_edge(e.end_code, e.start_code, cost=e.distance, object=e)
+        G.add_edge(e.start_code, e.end_code, weight=e.distance, object=e)
         print(e.start_code, e.end_code)
 
     for edge in G.edges:
