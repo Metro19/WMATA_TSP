@@ -31,6 +31,7 @@ def create_graph():
         # add all edges
         for e in wmata.get_all_paths_between_stations():
             G.add_edge(e.start_code, e.end_code, weight=e.distance, object=e)
+            G.add_edge(e.end_code, e.start_code, weight=e.distance, object=e)
             print(e.start_code, e.end_code)
 
         for edge in G.edges:

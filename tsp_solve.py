@@ -6,6 +6,12 @@
 import mlrose
 import networkx
 
+# Timing Vars
+import numpy
+
+OSI_TIME = 10
+LINE_SWITCH = 7
+
 
 def numeric_station_code(code: str, nodes: list) -> int:
     """
@@ -31,7 +37,8 @@ def graph_to_tlist(G: networkx.Graph) -> list[tuple]:
     # iter through edges
     for edge in G.edges(data=True):
         # print(edge)
-        dists.append((numeric_station_code(edge[0], list(G.nodes)), numeric_station_code(edge[1], list(G.nodes)), edge[2]["weight"]))
+        dists.append((numeric_station_code(edge[0], list(G.nodes)), numeric_station_code(edge[1], list(G.nodes)),
+                      edge[2]["weight"]))
 
     return dists
 
@@ -44,16 +51,19 @@ def run_simulation(G: networkx.Graph):
     :return:
     """
 
+    # verify complete graph
     # prep data
     dists = graph_to_tlist(G)
 
     # run solutions
     f_dists = mlrose.TravellingSales(distances=dists)
     prob = mlrose.TSPOpt(length=len(G.nodes), fitness_fn=f_dists, maximize=False)
-    bs, bf = mlrose.genetic_alg(prob, random_state=2)
+    bs, bf = mlrose.genetic_alg(prob, random_state=2, mutation_prob=.75)
 
     # print data
     print(bs)
     print(bf)
 
     # TODO: Check why fitness returns infinity
+    """Solving this problem would require adding connections from
+    every station to every station to simulate a 2D Plane"""
