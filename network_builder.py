@@ -6,8 +6,9 @@
 import os
 import networkx as nx
 import wmata
-from tsp_solve import run_simulation
+from vrp_solve import run_simulation
 import pickle
+import matplotlib.pyplot as plt
 
 # vars
 # TODO: Move to a txt or easy edit file
@@ -22,14 +23,21 @@ def create_graph():
     else:
         # init graph
         G = nx.DiGraph()
+        all_stations = wmata.get_all_stations()
 
         # add all stations
-        for s in wmata.get_all_stations():
+        for s in all_stations:
             G.add_node(s.station_code, object=s)
             print(s.station_code)
 
         # add all edges
         for e in wmata.get_all_paths_between_stations():
+            G.add_edge(e.start_code, e.end_code, weight=e.distance, object=e)
+            G.add_edge(e.end_code, e.start_code, weight=e.distance, object=e)
+            print(e.start_code, e.end_code)
+
+        # add ISI edges
+        for e in wmata.get_ISI_from_stations(all_stations):
             G.add_edge(e.start_code, e.end_code, weight=e.distance, object=e)
             G.add_edge(e.end_code, e.start_code, weight=e.distance, object=e)
             print(e.start_code, e.end_code)

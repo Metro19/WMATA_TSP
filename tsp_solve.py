@@ -21,7 +21,7 @@ def numeric_station_code(code: str, nodes: list) -> int:
     :param code: Station code
     :return: Unique numeric code for each station code
     """
-    full = nodes.index(code)
+    full = str(ord(code[0])) + str(code[1:])
     return int(full)
 
 
